@@ -8,6 +8,8 @@ import { useState } from "react";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { addToWishList } from "./store/cart-slice";
+import { addToCartNoConfg } from "./store/cart-slice";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const ProductItem = (props) => {
   const [fav, setFav] = useState(false);
@@ -28,15 +30,25 @@ const ProductItem = (props) => {
     }
   }, [wishlist]);
 
+  const cartHandler = (Id) => {
+    dispatch(addToCartNoConfg(Id)).unwrap();
+
+    setAddedToCart(true);
+  };
+
+  const [addedTocart, setAddedToCart] = useState(false);
+
   return (
     <>
       {wishlist && (
         <div className="product-item">
           <img alt="" src={props.img} />
           <div className="p-item">
-            <div className="info">
-              <ShoppingCartOutlined />
-            </div>
+            {!addedTocart && (
+              <div onClick={() => cartHandler(props.id)} className="info">
+                <ShoppingCartOutlined />
+              </div>
+            )}
             <div className="info">
               <Link
                 style={{ color: "black" }}

@@ -9,7 +9,6 @@ import productsSlice, { GetPopularProducts } from "./store/products-slice";
 
 const Home = () => {
   const prods = useSelector((state) => state.products.products);
-  console.log(prods);
   const dispatch = useDispatch();
 
   useEffect(() => {

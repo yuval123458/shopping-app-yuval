@@ -17,6 +17,8 @@ const Cart = () => {
 
   const cart = useSelector((state) => state.cart.cart);
 
+  console.log(cart);
+
   let total = 0;
 
   if (cart.products)
@@ -41,7 +43,7 @@ const Cart = () => {
 
   return (
     <Fragment>
-      {!cart.products && (
+      {(!cart.products || cart.products.length === 0) && (
         <h3>
           Could not find products in your bag. Please{" "}
           <Link to="/sign-in">Sign In</Link> to add items .
@@ -99,37 +101,69 @@ const Cart = () => {
                         setShow={closeHandler}
                       />
                     )}
-                    <div className="cart-product">
-                      <div className="cart-product-detail">
-                        <img alt="cart-photo-img" src={product.img} />
-                        <div className="product-details">
-                          <h3>{product.title}</h3>
-                          <span>ID: {product.productId.toString()}</span>
-                          <span
-                            style={{
-                              backgroundColor: `${product.color}`,
-                            }}
-                            className="color-span"
-                          ></span>
-                          <span>Size: {product.size}</span>
-                        </div>
-                        <div className="price-detail">
-                          <div className="price-detail-amount">
-                            <span> Amount: {product.quantity}</span>
+                    {product.configure === true && (
+                      <div className="cart-product">
+                        <div className="cart-product-detail">
+                          <img alt="cart-photo-img" src={product.img} />
+                          <div className="product-details">
+                            <h3>{product.title}</h3>
+                            <span>ID: {product.productId.toString()}</span>
+                            <Link
+                              style={{
+                                textDecoration: "none",
+                                marginTop: "50px",
+                              }}
+                              to={`/products/product/${product.productId}`}
+                              onClick={() => deleteHandler(product._id)}
+                            >
+                              Please configure size, color and amount before you
+                              procceed.
+                            </Link>
+
+                            <button
+                              onClick={() => showHandler(product._id)}
+                              style={{ width: "10%", height: "10%" }}
+                              className="delete-button"
+                            >
+                              <DeleteIcon />
+                            </button>
                           </div>
-                          <span>
-                            Price: {product.price * product.quantity} $
-                          </span>
-                          <button
-                            onClick={() => showHandler(product._id)}
-                            style={{ width: "10%", height: "10%" }}
-                            className="delete-button"
-                          >
-                            <DeleteIcon />
-                          </button>
                         </div>
                       </div>
-                    </div>
+                    )}
+                    {product.configure === false && (
+                      <div className="cart-product">
+                        <div className="cart-product-detail">
+                          <img alt="cart-photo-img" src={product.img} />
+                          <div className="product-details">
+                            <h3>{product.title}</h3>
+                            <span>ID: {product.productId.toString()}</span>
+                            <span
+                              style={{
+                                backgroundColor: `${product.color}`,
+                              }}
+                              className="color-span"
+                            ></span>
+                            <span>Size: {product.size}</span>
+                          </div>
+                          <div className="price-detail">
+                            <div className="price-detail-amount">
+                              <span> Amount: {product.quantity}</span>
+                            </div>
+                            <span>
+                              Price: {product.price * product.quantity} $
+                            </span>
+                            <button
+                              onClick={() => showHandler(product._id)}
+                              style={{ width: "10%", height: "10%" }}
+                              className="delete-button"
+                            >
+                              <DeleteIcon />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     <hr></hr>
                   </Fragment>
                 ))}

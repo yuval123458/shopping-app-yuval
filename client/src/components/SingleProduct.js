@@ -41,6 +41,7 @@ const SingleProduct = () => {
       size,
       color,
       quantity,
+      configure: false,
     };
 
     await dispatch(addToCart(body)).unwrap();

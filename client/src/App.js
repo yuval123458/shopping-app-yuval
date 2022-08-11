@@ -19,6 +19,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import WishList from "./components/WishList";
 import Checkout from "./components/Checkout";
 import React from "react";
+import { getCart } from "./components/store/cart-slice";
+
+// --openssl-legacy-provider start
 
 const App = () => {
   const productsLoading = useSelector((state) => state.products.loading);
@@ -34,8 +37,9 @@ const App = () => {
   useEffect(() => {
     if (localStorage.token) {
       dispatch(autoSignIn());
+      dispatch(getCart());
     }
-  }, [token]);
+  }, [localStorage.token]);
 
   return (
     <Fragment>

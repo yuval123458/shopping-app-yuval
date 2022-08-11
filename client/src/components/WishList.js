@@ -11,13 +11,13 @@ const WishList = () => {
     dispatch(getCart()).unwrap();
   }, []);
 
-  const cart = useSelector((state) => state.cart.cart);
+  const wishList = useSelector((state) => state.cart.wishList);
 
   return (
     <>
       <h1 style={{ textAlign: "center", margin: "30px" }}>YOUR WISH-LIST</h1>
 
-      <Products prods={cart.wishlist} />
+      <Products prods={wishList} />
     </>
   );
 };

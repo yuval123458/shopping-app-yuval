@@ -28,6 +28,32 @@ export const addToCart = createAsyncThunk(
   }
 );
 
+export const addToCartNoConfg = createAsyncThunk(
+  "addToCart",
+  async (Id, thunkAPI) => {
+    console.log(Id);
+    try {
+      const response = await axios.put(
+        process.env.REACT_APP_BACKEND_URL + "api/cart/confg",
+        { Id },
+        {
+          headers: {
+            "x-auth-token": localStorage.getItem("token"),
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+
+      const errors = error.response.data.errors;
+
+      return thunkAPI.rejectWithValue(errors);
+    }
+  }
+);
+
 export const getCart = createAsyncThunk("getCart", async (thunkAPI) => {
   try {
     const response = await axios.get(
@@ -93,7 +119,7 @@ export const DeleteFromCart = createAsyncThunk(
 const initialState = {
   cart: [],
   wishList: [],
-  length: 0,
+  productsLength: 0,
   errors: null,
   loading: false,
 };
@@ -105,6 +131,7 @@ const cartSlice = createSlice({
     clearCart(state, action) {
       state.cart = null;
       state.errors = null;
+      state.productsLength = 0;
       state.loading = false;
       state.wishList = [];
     },
@@ -116,6 +143,7 @@ const cartSlice = createSlice({
     [addToCart.fulfilled]: (state, action) => {
       console.log("addToCart fulfilled");
       state.cart = action.payload;
+      state.productsLength++;
       console.log(state.cart);
       state.loading = false;
     },
@@ -130,13 +158,32 @@ const cartSlice = createSlice({
       console.log(state.errors);
     },
 
+    //  addToCartNoConfg
+
+    [addToCartNoConfg.fulfilled]: (state, action) => {
+      console.log("addToCartNoConfg fulfilled");
+      state.cart = action.payload;
+      state.productsLength++;
+      console.log(state.cart);
+      state.loading = false;
+    },
+    [addToCartNoConfg.pending]: (state, action) => {
+      console.log("addToCartNoConfg pending");
+    },
+    [addToCartNoConfg.rejected]: (state, action) => {
+      console.log("addToCartNoConfg rejected");
+      state.loading = false;
+      state.errors = action.payload;
+      console.log(state.errors);
+    },
+
     //  getCart
 
     [getCart.fulfilled]: (state, action) => {
       console.log("getCart fulfilled");
       state.cart = action.payload.cart;
+      state.productsLength = action.payload.cart.products.length;
       state.wishList = action.payload.cart.wishlist;
-      state.length = state.cart.products.length;
       state.loading = false;
     },
     [getCart.pending]: (state, action) => {
@@ -154,7 +201,7 @@ const cartSlice = createSlice({
 
     [addToWishList.fulfilled]: (state, action) => {
       console.log("addToWishList fulfilled");
-      state.wishlist = action.payload;
+      state.wishList = action.payload;
       state.loading = false;
     },
     [addToWishList.pending]: (state, action) => {
@@ -172,6 +219,7 @@ const cartSlice = createSlice({
     [DeleteFromCart.fulfilled]: (state, action) => {
       console.log("DeleteFromCart fulfilled");
       state.cart = action.payload.cart;
+      state.productsLength--;
       console.log(state.cart);
       state.loading = false;
     },

@@ -1,3 +1,4 @@
+const { findLastIndex } = require("lodash");
 const mongoose = require("mongoose");
 
 const cartSchema = new mongoose.Schema({
@@ -9,8 +10,9 @@ const cartSchema = new mongoose.Schema({
       price: { type: Number, required: true },
       img: { type: String, required: true },
       quantity: { type: Number, default: 1 },
-      color: { type: String, required: true },
+      color: { type: String, required: false },
       size: { type: String, required: true },
+      configure: { type: Boolean, required: true },
     },
   ],
   wishlist: [
