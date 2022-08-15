@@ -56,7 +56,7 @@ const Footer = () => {
           <MailOutlinedIcon style={{ marginRight: "10px" }} />{" "}
           yuval.shopping@gmail.com
         </div>
-        <img src="https://i.ibb.co/Qfvn4z6/payment.png" />
+        <img src="https://i.ibb.co/Qfvn4z6/payment.png" alt="footer-img" />
       </div>
     </div>
   );

@@ -43,6 +43,7 @@ router.post(
   ],
   async (req, res) => {
     const errors = validationResult(req);
+    console.log("addtoCart");
 
     if (!errors.isEmpty()) {
       return res.status(403).json({ errors: errors.array() });
@@ -84,6 +85,7 @@ router.post(
 
 router.put("/confg", checkAuth, async (req, res) => {
   const { Id } = req.body;
+  console.log("addtocartnoconfg");
 
   let product;
   let cart;

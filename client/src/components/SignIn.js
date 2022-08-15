@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { SignIn as Login } from "./store/users-slice";
-import AlertModel from "./layout/AlertModel";
 import React from "react";
 
 const SignIn = () => {

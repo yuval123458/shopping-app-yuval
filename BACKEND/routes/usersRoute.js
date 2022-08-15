@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const Cart = require("../models/Cart");
 const checkAuth = require("../middleware/CheckAuth");
+const { findById } = require("../models/User");
 
 const router = express.Router();
 
@@ -24,7 +25,7 @@ router.get("/", checkAuth, async (req, res) => {
       return res.json("no user found.");
     }
 
-    res.json({ user: user });
+    res.json(user.newsletter);
   } catch (error) {
     return res.status(500).json("server error");
   }
@@ -152,5 +153,28 @@ router.post(
     }
   }
 );
+
+//      PATCH sign user to newsletter
+//      api/users/news-letter
+//      access: private
+
+router.patch("/newsletter", checkAuth, async (req, res) => {
+  let user;
+  try {
+    user = await User.findById(req.userId);
+
+    if (user.newsletter === true) {
+      user.newsletter = false;
+    } else {
+      user.newsletter = true;
+    }
+
+    await user.save();
+
+    return res.json(user.newsletter);
+  } catch (error) {
+    return res.status(500).json("server error");
+  }
+});
 
 module.exports = router;

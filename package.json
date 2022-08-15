@@ -12,5 +12,8 @@
   "bugs": {
     "url": "https://github.com/yuval123458/yuval123458/issues"
   },
-  "homepage": "https://github.com/yuval123458/yuval123458#readme"
+  "homepage": "https://github.com/yuval123458/yuval123458#readme",
+  "dependencies": {
+    "stripe": "^10.1.0"
+  }
 }

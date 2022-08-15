@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { SignUp } from "./store/users-slice";
-import AlertModel from "./layout/AlertModel";
 
 const Register = () => {
   const dispatch = useDispatch();

@@ -4,7 +4,7 @@ const config = require("config");
 const usersRoute = require("./routes/usersRoute");
 const productsRoute = require("./routes/productsRoute");
 const cartRoute = require("./routes/cartRoute");
-const ordersRoute = require("./routes/ordersRoute");
+const stripeRoute = require("./routes/stripe");
 
 const app = express();
 
@@ -31,7 +31,7 @@ app.use((req, res, next) => {
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET,HEAD,OPTIONS,POST,PUT,DELETE"
+    "GET,HEAD,OPTIONS,POST,PUT,DELETE,PATCH"
   );
   next();
 });
@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 app.use("/api/users", usersRoute);
 app.use("/api/products", productsRoute);
 app.use("/api/cart", cartRoute);
-app.use("/api/orders", ordersRoute);
+app.use("/api/stripe", stripeRoute);
 
 const PORT = process.env.PORT || 5000;
 

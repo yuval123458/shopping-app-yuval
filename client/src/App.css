@@ -698,7 +698,7 @@ body {
 }
 .cart-top {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-bottom: 10px;
 }
 .cart-top button {

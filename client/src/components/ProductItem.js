@@ -9,7 +9,6 @@ import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { addToWishList } from "./store/cart-slice";
 import { addToCartNoConfg } from "./store/cart-slice";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const ProductItem = (props) => {
   const [fav, setFav] = useState(false);

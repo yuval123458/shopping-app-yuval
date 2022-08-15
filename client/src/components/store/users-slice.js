@@ -2,25 +2,43 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// export const autoSignIn = createAsyncThunk("autiSignIn", async (thunkAPI) => {
-//   try {
-//     const response = await axios.get(
-//       process.env.REACT_APP_BACKEND_URL + "api/users",
-//       {
-//         headers: {
-//           "x-auth-token": localStorage.getItem("token"),
-//         },
-//       }
-//     );
+export const newsletterSignUp = createAsyncThunk(
+  "newsletter",
+  async (body, thunkAPI) => {
+    try {
+      await axios.patch(
+        process.env.REACT_APP_BACKEND_URL + "api/users/newsletter",
+        body,
+        {
+          headers: {
+            "x-auth-token": thunkAPI.getState().users.token,
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+);
 
-//     return response.data;
-//   } catch (error) {
-//     const errors = error.response.data;
-//     console.log(errors);
+export const autoSignIn = createAsyncThunk("autoSignIn", async (thunkAPI) => {
+  try {
+    const response = await axios.get(
+      process.env.REACT_APP_BACKEND_URL + "api/users",
+      {
+        headers: {
+          "x-auth-token": localStorage.getItem("token"),
+        },
+      }
+    );
 
-//     return thunkAPI.rejectWithValue(errors);
-//   }
-// });
+    console.log(response.data);
+
+    return response.data;
+  } catch (error) {
+    console.log(error.message);
+  }
+});
 
 export const SignUp = createAsyncThunk("signup", async (body, thunkAPI) => {
   try {
@@ -58,16 +76,13 @@ const initialState = {
   loading: false,
   token: null,
   errors: [],
+  newsletter: false,
 };
 
 const usersSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
-    autoSignIn(state, action) {
-      console.log("autoSignUp");
-      state.token = localStorage.getItem("token");
-    },
     Logout(state, action) {
       localStorage.removeItem("token");
       state.token = null;
@@ -116,28 +131,30 @@ const usersSlice = createSlice({
       state.loading = false;
     },
 
-    // //   get user with refreshed page
+    //   autoSignIn
 
-    // [autoSignIn.fulfilled]: (state, action) => {
-    //   console.log("autoSignIn fulfilled");
-    //   state.token = localStorage.getItem("token");
-    //   state.loading = false;
-    // },
-    // [autoSignIn.pending]: (state, action) => {
-    //   console.log("autoSignIn pending");
-    //   state.loading = true;
-    // },
-    // [autoSignIn.rejected]: (state, action) => {
-    //   console.log("autoSignIn rejected");
-    //   state.token = null;
-    //   state.loading = false;
-    //   state.errors = action.payload;
-    // },
+    [autoSignIn.fulfilled]: (state, action) => {
+      console.log("autoSignIn fulfilled");
+      state.token = localStorage.getItem("token");
+      state.newsletter = action.payload;
+      state.loading = false;
+    },
+    [autoSignIn.pending]: (state, action) => {
+      console.log("autoSignIn pending");
+      state.loading = true;
+    },
+    [autoSignIn.rejected]: (state, action) => {
+      console.log("autoSignIn rejected");
+      state.loading = false;
+    },
+
+    [newsletterSignUp.fulfilled]: (state, action) => {
+      console.log("newsletterSignUp.fulfilled");
+      state.newsletter = true;
+    },
   },
 });
 
 export default usersSlice.reducer;
 
 export const Logout = usersSlice.actions.Logout;
-
-export const autoSignIn = usersSlice.actions.autoSignIn;

@@ -3,28 +3,41 @@ import { useDispatch, useSelector } from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DeleteFromCart, getCart } from "./store/cart-slice";
 import AlertModel from "./layout/AlertModel";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React from "react";
+import StripeCheckout from "react-stripe-checkout";
+import { stripeCharge } from "./store/cart-slice";
 
 const Cart = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [model, showModel] = useState(false);
   const [prod, setProd] = useState("");
+
+  const KEY = process.env.REACT_APP_STRIPE;
 
   useEffect(() => {
     dispatch(getCart()).unwrap();
   }, []);
 
+  const onToken = (token) => {
+    console.log(token);
+
+    dispatch(stripeCharge({ tokenId: token.id, amount: total * 100 })).unwrap();
+    navigate("/");
+  };
   const cart = useSelector((state) => state.cart.cart);
 
   console.log(cart);
 
   let total = 0;
 
-  if (cart.products)
+  if (cart.products) {
     for (const product of cart.products) {
       total = total + product.quantity * product.price;
     }
+    total = Math.floor(total.toFixed(2));
+  }
 
   const closeHandler = () => {
     showModel(false);
@@ -43,19 +56,10 @@ const Cart = () => {
 
   return (
     <Fragment>
-      {(!cart.products || cart.products.length === 0) && (
-        <h3>
-          Could not find products in your bag. Please{" "}
-          <Link to="/sign-in">Sign In</Link> to add items .
-          <Link to={"/register"}>Create your account</Link> if you do not have
-          one yet.
-        </h3>
-      )}
       {cart.products && (
         <div className="cart-cont">
           <div className="cart-wrapper">
             <h1>YOUR BAG</h1>
-
             <div className="cart-top">
               {" "}
               <button>
@@ -67,23 +71,6 @@ const Cart = () => {
                 SHOPPING BAG ({`${cart.products.length}`})
               </div>
               <span>WISHLIST ({`${cart.wishlist.length}`})</span>
-              <button
-                style={{
-                  display: `${cart.products.length === 0 ? "none" : ""}`,
-                }}
-              >
-                {" "}
-                <Link
-                  style={{
-                    textDecoration: "none",
-                    color: "black",
-                    display: `${cart.products.length === 0 ? "none" : ""}`,
-                  }}
-                  to="/checkout"
-                >
-                  CHECKOUT
-                </Link>
-              </button>
             </div>
             <div className="cart-bottom">
               <div className="cart-info">
@@ -104,7 +91,7 @@ const Cart = () => {
                     {product.configure === true && (
                       <div className="cart-product">
                         <div className="cart-product-detail">
-                          <img alt="cart-photo-img" src={product.img} />
+                          <img alt="product-img" src={product.img} />
                           <div className="product-details">
                             <h3>{product.title}</h3>
                             <span>ID: {product.productId.toString()}</span>
@@ -134,7 +121,7 @@ const Cart = () => {
                     {product.configure === false && (
                       <div className="cart-product">
                         <div className="cart-product-detail">
-                          <img alt="cart-photo-img" src={product.img} />
+                          <img alt="product-img" src={product.img} />
                           <div className="product-details">
                             <h3>{product.title}</h3>
                             <span>ID: {product.productId.toString()}</span>
@@ -169,7 +156,8 @@ const Cart = () => {
                 ))}
               </div>
             </div>
-            {cart.products.length > 0 && (
+            {cart.products.filter((prod) => prod.configure === true).length ===
+              0 && (
               <div className="cart-summary">
                 <h2>CART SUMMARY</h2>
                 <div className="summary-item">
@@ -190,18 +178,29 @@ const Cart = () => {
                   <span>Total</span>
                   <span> {total > 50 ? total : total + 6.9} $</span>
                 </div>
-                <button>
-                  {" "}
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                      color: "black",
-                    }}
-                    to="/checkout"
-                  >
-                    CHECKOUT
-                  </Link>
-                </button>
+                <StripeCheckout
+                  name="Yuval's Shop"
+                  description={"your total is " + total + "$"}
+                  amount={total * 100}
+                  stripeKey={KEY}
+                  token={onToken}
+                  ComponentClass="div"
+                  shippingAddress
+                  billingAddress
+                >
+                  <button>
+                    {" "}
+                    <Link
+                      style={{
+                        textDecoration: "none",
+                        color: "black",
+                      }}
+                      to="/checkout"
+                    >
+                      CHECKOUT
+                    </Link>
+                  </button>
+                </StripeCheckout>
               </div>
             )}
           </div>

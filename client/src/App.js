@@ -17,22 +17,16 @@ import { Fragment, useEffect } from "react";
 import { autoSignIn } from "./components/store/users-slice";
 import "bootstrap/dist/css/bootstrap.min.css";
 import WishList from "./components/WishList";
-import Checkout from "./components/Checkout";
 import React from "react";
 import { getCart } from "./components/store/cart-slice";
-
-// --openssl-legacy-provider start
 
 const App = () => {
   const productsLoading = useSelector((state) => state.products.loading);
   const usersLoading = useSelector((state) => state.users.loading);
   const cartLoading = useSelector((state) => state.cart.loading);
   const dispatch = useDispatch();
-  console.log(cartLoading);
   const token = useSelector((state) => state.users.token);
-
-  const cart = useSelector((state) => state.cart.cart);
-  console.log(cart);
+  const newsletter = useSelector((state) => state.users.newsletter);
 
   useEffect(() => {
     if (localStorage.token) {
@@ -54,7 +48,7 @@ const App = () => {
         }}
       >
         <Announcement />
-        <Navbar />
+        <Navbar token={token} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/wishlist" element={<WishList />} />
@@ -66,9 +60,8 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
         </Routes>
-        <NewsLetter />
+        <NewsLetter newsletter={newsletter} token={token} />
         <Footer />
       </div>
     </Fragment>

@@ -1,18 +1,10 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import "../../App.css";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import Cards from "./ImageCards";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-
-const Slider = styled.div`
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  position: relative;
-  overflow: hidden;
-`;
 
 const SliderWrapper = styled.div`
   height: 100%;
@@ -39,7 +31,6 @@ const SliderImg = () => {
   };
 
   return (
-    // <Slider>
     <div className="slider">
       <div onClick={leftArrowHandler} className="arrow-left">
         <ArrowLeftIcon />
@@ -66,7 +57,6 @@ const SliderImg = () => {
         <ArrowRightIcon />
       </div>
     </div>
-    //  </Slider>
   );
 };
 

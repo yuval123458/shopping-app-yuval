@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment } from "react";
 import classes from "../../App.css";
 import SearchIcon from "@mui/icons-material/Search";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,10 +7,8 @@ import { Badge } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { Logout } from "../store/users-slice";
 import { clearCart } from "../store/cart-slice";
-import { getCart } from "../store/cart-slice";
 
-const Navbar = () => {
-  const token = useSelector((state) => state.users.token);
+const Navbar = ({ token }) => {
   const productsLength = useSelector((state) => state.cart.productsLength);
   console.log(productsLength);
   const dispatch = useDispatch();

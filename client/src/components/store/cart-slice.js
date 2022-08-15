@@ -6,13 +6,14 @@ export const addToCart = createAsyncThunk(
   "addToCart",
   async (body, thunkAPI) => {
     console.log(body);
+    console.log("addtoCart");
     try {
       const response = await axios.post(
         process.env.REACT_APP_BACKEND_URL + "api/cart",
         body,
         {
           headers: {
-            "x-auth-token": localStorage.getItem("token"),
+            "x-auth-token": thunkAPI.getState().users.token,
           },
         }
       );
@@ -29,7 +30,7 @@ export const addToCart = createAsyncThunk(
 );
 
 export const addToCartNoConfg = createAsyncThunk(
-  "addToCart",
+  "addToCartNoConfg",
   async (Id, thunkAPI) => {
     console.log(Id);
     try {
@@ -38,7 +39,7 @@ export const addToCartNoConfg = createAsyncThunk(
         { Id },
         {
           headers: {
-            "x-auth-token": localStorage.getItem("token"),
+            "x-auth-token": thunkAPI.getState().users.token,
           },
         }
       );
@@ -82,7 +83,7 @@ export const addToWishList = createAsyncThunk(
         { pId },
         {
           headers: {
-            "x-auth-token": localStorage.getItem("token"),
+            "x-auth-token": thunkAPI.getState().users.token,
           },
         }
       );
@@ -104,7 +105,28 @@ export const DeleteFromCart = createAsyncThunk(
         process.env.REACT_APP_BACKEND_URL + `api/cart/${productId}`,
         {
           headers: {
-            "x-auth-token": localStorage.getItem("token"),
+            "x-auth-token": thunkAPI.getState().users.token,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const stripeCharge = createAsyncThunk(
+  "stripeCharge",
+  async (body, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        process.env.REACT_APP_BACKEND_URL + "api/stripe/payment",
+        body,
+        {
+          headers: {
+            "x-auth-token": thunkAPI.getState().users.token,
           },
         }
       );
@@ -231,6 +253,25 @@ const cartSlice = createSlice({
       state.loading = false;
       state.errors = action.payload;
       console.log(state.errors);
+    },
+
+    //  stripeCharge
+
+    [stripeCharge.fulfilled]: (state, action) => {
+      console.log("stripeCharge fulfilled");
+      console.log(action.payload);
+      state.cart.products = [];
+      state.productsLength = 0;
+      state.errors = null;
+      state.loading = false;
+    },
+    [stripeCharge.pending]: (state, action) => {
+      console.log("stripeCharge pending");
+      state.loading = true;
+    },
+    [stripeCharge.rejected]: (state, action) => {
+      console.log("stripeCharge rejected");
+      state.loading = false;
     },
   },
 });
