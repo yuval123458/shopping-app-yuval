@@ -1,7 +1,0 @@
-{
-  "mongoURI": "mongodb+srv://yuval:212387@cluster0.ntxne.mongodb.net/?retryWrites=true&w=majority",
-  "jwtSecret": "superSecret",
-  "stripeAccountId": "acct_1LTjooF2u1osnXld",
-  "stripeProdId": "prod_ME1OQXbvoJM6Gy",
-  "stripeSecretKey": "sk_test_51LTjooF2u1osnXldngZx19hgPsVmguouA8UWFIDIdveN90ri2qPty0LDyIhFcnmSz46VlC5E2m6zf8LFCRHlKCAO00XN9z68E9"
-}
